@@ -1,0 +1,21 @@
+{
+  "001": "User Created",
+  "002": "Email Verified",
+  "003": "Email Verify Code Expired, Please check your inbox for new one",
+  "004": "Email Verify Code Invalid",
+  "005": "Login successful",
+  "006": "Incorrect credentials",
+  "007": "You need to verify your email first, please check your inbox",
+  "008": "Email Verify Code Sent",
+  "009": "User already verifed",
+  "010": "Token Expired",
+  "011": "Password Succesfully Reseted",
+  "012": "No permision",
+  "013": "Token Expired, Please login again",
+  "014": "Item not found",
+  "015": "Item Updated",
+  "016": "Item Created",
+  "017": "Data Received",
+  "998": "Invalid Data",
+  "999": "Something went wrong"
+}
