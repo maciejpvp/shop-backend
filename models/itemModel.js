@@ -12,7 +12,6 @@ const itemSchema = new mongoose.Schema({
     type: String,
     required: [true, "Item must have description"],
     maxlength: 1000,
-    trim: true,
   },
   price: {
     type: Number,

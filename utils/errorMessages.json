@@ -16,6 +16,8 @@
   "015": "Item Updated",
   "016": "Item Created",
   "017": "Data Received",
+  "018": "Invalid Input Data",
+  "019": "Duplicate Input Data",
   "998": "Invalid Data",
   "999": "Something went wrong"
 }

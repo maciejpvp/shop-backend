@@ -3,24 +3,25 @@ import { AppError } from "./../utils/appError.js";
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
   console.log(message);
-  return new AppError(message, 400);
+  return new AppError("998", 400);
 };
 
 const handleDuplicateFiledDB = (err) => {
-  const message = `Duplicate field value: "${err.keyValue.name}". Please use another value!`;
-  return new AppError(message, 400);
+  // const message = `Duplicate field value: "${err.keyValue.name}". Please use another value!`;
+  const dupKey = Object.keys(err.keyValue)[0];
+  return new AppError(`019-${dupKey}`, 400);
 };
 
 const handleValidationErrorDB = (err) => {
-  const errors = Object.values(err.errors).map((el) => el.properties.message);
-  const message = `Invalid input data: ${errors.join(". ")}`;
-  return new AppError(message, 400);
+  const errors = Object.values(err.errors).map((el) => el.properties.path);
+  // const message = `Invalid input data: ${errors.join(". ")}`;
+  console.log(errors.map((err) => err));
+  return new AppError(`018-${errors}`, 400);
 };
 
-const handleJWTError = () =>
-  new AppError("Invalid token. Please try again", 401);
+const handleJWTError = () => new AppError("010", 401);
 
-const handleJWTTokenExpired = () => new AppError("Token Expired", 401);
+const handleJWTTokenExpired = () => new AppError("010", 401);
 
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({

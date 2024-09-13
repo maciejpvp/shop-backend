@@ -28,13 +28,10 @@ export const getAllItems = catchAsync(async (req, res, next) => {
     .filter()
     .sort()
     .limitFields()
-    .pagination();
+    .pagination()
+    .stock();
 
   const items = await features.query;
-
-  items.forEach((item) => {
-    item.stock = undefined;
-  });
 
   res.status(200).json({
     status: "success",
@@ -63,6 +60,7 @@ export const getItemById = catchAsync(async (req, res, next) => {
         name: item.name,
         description: item.description,
         price: item.price,
+        images: item.images,
         stock: {
           S: item.stock.get("S") > 0 ? "Available" : "Not Available",
           M: item.stock.get("M") > 0 ? "Available" : "Not Available",

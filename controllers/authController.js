@@ -34,7 +34,7 @@ export const signup = catchAsync(async (req, res, next) => {
 
 export const verifyEmail = catchAsync(async (req, res, next) => {
   const { email, code } = req.body;
-  console.log(email);
+  console.log({ email }, { code });
   const user = await User.findOne({ email }).select("+active");
   if (user.active) return next(new AppError("009", 400));
   const [isValid, message, errorCode] = user.verifyEmail(code);
@@ -42,7 +42,7 @@ export const verifyEmail = catchAsync(async (req, res, next) => {
     if (errorCode === "003") {
       sendEmail(user);
     }
-    return next(new AppError(message, 400, errorCode));
+    return next(new AppError(errorCode, 400));
   }
   user.emailVerifyCode = undefined;
   user.emailVerifyExpires = undefined;
@@ -74,9 +74,9 @@ export const login = catchAsync(async (req, res, next) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    httpOnly: true,
+    httpOnly: false, //true,
   };
-  if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
+  if (process.env.NODE_ENV === "production") cookieOptions.secure = false; //true
 
   res.cookie("jwt", token, cookieOptions);
 
@@ -87,6 +87,7 @@ export const login = catchAsync(async (req, res, next) => {
     code: "005",
     message: "Login successful",
     data: {
+      token,
       user: {
         name: user.name,
         email: user.email,

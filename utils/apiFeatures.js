@@ -5,7 +5,7 @@ export class APIFeatures {
   }
   filter() {
     const queryObj = { ...this.queryString };
-    const excludeFields = ["page", "sort", "limit", "fields"];
+    const excludeFields = ["page", "sort", "limit", "fields", "stock"];
     excludeFields.forEach((el) => delete queryObj[el]);
 
     let queryStr = JSON.stringify(queryObj);
@@ -40,6 +40,22 @@ export class APIFeatures {
     const limit = this.queryString.limit * 1 || 100;
     const skip = (page - 1) * limit;
     this.query = this.query.skip(skip).limit(limit);
+    return this;
+  }
+  stock() {
+    if (this.queryString.stock) {
+      const sizes = this.queryString.stock.split(",");
+
+      const stockConditions = sizes.map((size) => ({
+        [`stock.${size}`]: { $gt: 0 },
+      }));
+
+      console.log(stockConditions);
+
+      if (stockConditions.length > 0) {
+        this.query = this.query.find({ $or: stockConditions });
+      }
+    }
     return this;
   }
 }
