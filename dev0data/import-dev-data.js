@@ -3,9 +3,9 @@ dotenv.config({ path: "./config.env" });
 
 import fs from "fs";
 import mongoose from "mongoose";
-// import Tour from '../../models/tourModel.js';
-// import User from '../../models/userModel.js';
-// import Review from '../../models/reviewModel.js';
+import User from "../models/userModel.js";
+import Item from '../models/itemModel.js'
+import Cart from '../models/cartModel.js'
 
 const DB = process.env.DATABASE;
 mongoose
@@ -30,9 +30,9 @@ mongoose
 // );
 const importData = async () => {
   try {
-    await Tour.create(tours);
+    await Item.create(tours);
     await User.create(users, { validateBeforeSave: false });
-    await Review.create(reviews, { validateBeforeSave: false });
+    await Cart.create(reviews, { validateBeforeSave: false });
     console.log("Data loaded");
   } catch (err) {
     console.log(err);
@@ -42,7 +42,7 @@ const importData = async () => {
 
 const deleteData = async () => {
   try {
-    await Tour.deleteMany();
+    await Item.deleteMany();
     await User.deleteMany();
     await Review.deleteMany();
     console.log("Data deleted");
