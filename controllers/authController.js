@@ -158,8 +158,8 @@ const sendEmail = catchAsync(async (user, expires, type) => {
 });
 
 export const protect = catchAsync(async (req, res, next) => {
-  if (!req.cookies.jwt) return next(new AppError("013", 401));
-  const token = req.cookies.jwt;
+  if (!req.cookies.jwt || !req.headers['authorization']) return next(new AppError("013", 401));
+  const token = req.cookies.jwt || req.headers['authorization'].split(' ')[1];
 
   if (!token) return next(new AppError("013", 401));
 
