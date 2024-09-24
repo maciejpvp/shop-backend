@@ -5,7 +5,10 @@ import { catchAsync } from "../utils/catchAsync.js";
 
 export const getCart = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const cart = await Cart.findOne({ user: userId });
+  const cart = await Cart.findOne({ user: userId }).populate({
+    path: "items.item",
+    select: "name price images",
+  });
   res.status(200).json({
     status: "success",
     code: "017",
@@ -17,7 +20,8 @@ export const getCart = catchAsync(async (req, res, next) => {
 });
 export const addToCart = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
-  const { itemId, quantity, size } = req.body;
+  const itemId = req.params.id;
+  const { quantity, size } = req.body;
 
   if (!userId || !itemId || !quantity || !size) {
     return next(new AppError("998", 400));
@@ -42,9 +46,6 @@ export const addToCart = catchAsync(async (req, res, next) => {
   } else {
     cart.items.push({ item: itemId, quantity, size });
   }
-  cart.totalPrice = cart.items.reduce((total, cartItem) => {
-    return total + cartItem.quantity * item.price;
-  }, 0);
 
   await cart.save();
 
@@ -63,7 +64,11 @@ export const incQuantity = catchAsync(async (req, res, next) => {
   }
   const item = cart.items.find((el) => el._id.equals(itemId));
 
+  console.log(item);
   item.quantity++;
+  // cart.totalPrice = cart.items.reduce((total, cartItem) => {
+  //   return total + cartItem.quantity * item.price;
+  // }, 0);
   await cart.save();
 
   res.status(200).json({

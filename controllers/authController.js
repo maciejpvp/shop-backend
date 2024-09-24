@@ -141,11 +141,11 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 });
 
 const sendEmail = catchAsync(async (user, expires, type) => {
-  const now = Date.now() + 9 * 60 * 1000;
-  if (expires > now) {
-    console.log("Email timeout");
-    return false;
-  }
+  // const now = Date.now() + 9 * 60 * 1000;
+  // if (expires > now) {
+  //   console.log("Email timeout");
+  //   return false;
+  // }
   if (type === "email") {
     const verifyCode = user.createEmailVerificationCode();
     await user.save();
@@ -158,8 +158,12 @@ const sendEmail = catchAsync(async (user, expires, type) => {
 });
 
 export const protect = catchAsync(async (req, res, next) => {
-  if (!req.cookies.jwt || !req.headers['authorization']) return next(new AppError("013", 401));
-  const token = req.cookies.jwt || req.headers['authorization'].split(' ')[1];
+  console.log(!!req.headers["authorization"]);
+  console.log(!!req.cookies.jwt);
+  if (!req.headers["authorization"] && !req.cookies.jwt)
+    return next(new AppError("013", 401));
+  const token = req.cookies.jwt || req.headers["authorization"].split(" ")[1];
+  console.log(token);
 
   if (!token) return next(new AppError("013", 401));
 

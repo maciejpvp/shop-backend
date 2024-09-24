@@ -40,6 +40,19 @@ const cartSchema = new mongoose.Schema({
   },
 });
 
+cartSchema.pre("save", async function (next) {
+  const cart = this;
+
+  const populatedCart = await cart.populate("items.item");
+
+  cart.totalPrice = populatedCart.items.reduce((total, cartItem) => {
+    return total + cartItem.quantity * cartItem.item.price;
+  }, 0);
+
+  cart.updatedAt = Date.now();
+  next();
+});
+
 cartSchema.pre("save", function (next) {
   this.updatedAt = Date.now();
   next();
